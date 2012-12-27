@@ -8,5 +8,6 @@ ORIGINAL_APACHE2_DIR=`cat APACHE2_DIR`
 INSTALL_APACHE2_DIR=${INSTALL_DIR}/apache2
 
 cp -rT ${BUILD_DIR} ${INSTALL_DIR}
-cd ${INSTALL_APACHE2_DIR}
-find conf -type f -print0 | xargs -0 sed -i -e "s,${ORIGINAL_APACHE2_DIR},${INSTALL_APACHE2_DIR},g"
+cp -rT bin ${INSTALL_DIR}/bin
+find ${INSTALL_APACHE2_DIR}/conf -type f -print0 | xargs -0 sed -i -e "s,${ORIGINAL_APACHE2_DIR},${INSTALL_APACHE2_DIR},g"
+
