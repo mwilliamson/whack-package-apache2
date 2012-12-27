@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+set -e
+
+. $(dirname $0)/set-versions
+
+echo http://mirror.ox.ac.uk/sites/rsync.apache.org//apr/apr-${APR_VERSION}.tar.gz
+echo http://mirror.ox.ac.uk/sites/rsync.apache.org//apr/apr-util-${APR_UTIL_VERSION}.tar.gz
+echo ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VERSION}.tar.gz
+echo http://mirror.ox.ac.uk/sites/rsync.apache.org//httpd/httpd-${APACHE2_VERSION}.tar.gz

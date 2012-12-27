@@ -1,0 +1,54 @@
+#!/usr/bin/env sh
+
+set -e
+
+ROOT_DIR=`pwd`
+BUILD_DIR=${ROOT_DIR}/build-dir
+
+. $(dirname $0)/set-versions
+
+build_pcre() {
+    tar xzf pcre-${PCRE_VERSION}.tar.gz
+    PCRE_SRC_DIR=`pwd`/pcre-${PCRE_VERSION}
+    PCRE_DIR=${BUILD_DIR}/pcre
+    cd ${PCRE_SRC_DIR}
+    ./configure --prefix=${PCRE_DIR}
+    make
+    make install
+
+    cd ${ROOT_DIR}
+}
+
+untar_apache2_src() {
+    tar xzf httpd-${APACHE2_VERSION}.tar.gz
+
+    mkdir -p ${APACHE2_SRC_DIR}/srclib/apr
+    tar xzf apr-${APR_VERSION}.tar.gz --directory ${APACHE2_SRC_DIR}/srclib/apr --strip-components 1
+
+    mkdir -p ${APACHE2_SRC_DIR}/srclib/apr-util
+    tar xzf apr-util-${APR_UTIL_VERSION}.tar.gz --directory ${APACHE2_SRC_DIR}/srclib/apr-util --strip-components 1
+}
+
+build_apache2() {
+    build_pcre
+    APACHE2_SRC_DIR=httpd-${APACHE2_VERSION}
+    APACHE2_DIR=${BUILD_DIR}/apache2
+    untar_apache2_src
+
+    cd ${APACHE2_SRC_DIR}
+    ./configure \
+        LDFLAGS="-Wl,-rpath -Wl,\\\$\$ORIGIN/../../pcre/lib -Wl,-rpath -Wl,\\\$\$ORIGIN/../lib " \
+        --with-pcre=${PCRE_DIR} \
+        --prefix=${APACHE2_DIR} \
+        --enable-so \
+        --with-mpm=prefork
+    make
+    make install
+    
+    echo ${APACHE2_DIR} > ${ROOT_DIR}/APACHE2_DIR
+    sed -i -e "s,Listen 80,Listen ${PORT-80},g" ${APACHE2_DIR}/conf/httpd.conf
+    
+    cd ${ROOT_DIR}
+}
+
+build_apache2
