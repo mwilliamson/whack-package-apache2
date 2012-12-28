@@ -48,6 +48,9 @@ build_apache2() {
     echo ${BUILD_DIR} > ${ROOT_DIR}/BUILD_DIR
     sed -i -e "s,Listen 80,Listen ${PORT-80},g" ${APACHE2_DIR}/conf/httpd.conf
     
+    sed -i -e s,"'${BUILD_DIR}",'$(dirname $0)/..'\',g ${APACHE2_DIR}/bin/apachectl
+    sed -i -e s,"${BUILD_DIR}",'$(dirname $0)/..',g ${APACHE2_DIR}/bin/apachectl
+    
     mv ${APACHE2_DIR}/bin/httpd ${APACHE2_DIR}/bin/httpd-bin
     cp ${ROOT_DIR}/bin/httpd ${APACHE2_DIR}/bin/httpd
     
