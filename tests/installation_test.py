@@ -23,7 +23,7 @@ def install_apache2(directory, port):
     subprocess.check_call(["whack", "install", path, directory, "-pport={0}".format(port), "--no-cache"])
 
 def start_apache2(temp_dir):
-    return subprocess.Popen(["bin/apache2"], cwd=temp_dir)
+    return subprocess.Popen(["bin/httpd", "-DNO_DETACH"], cwd=temp_dir)
 
 def assert_default_apache_page_is_visible(port):
     url = "http://localhost:{0}/".format(port)

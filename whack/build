@@ -32,12 +32,12 @@ untar_apache2_src() {
 build_apache2() {
     build_pcre
     APACHE2_SRC_DIR=httpd-${APACHE2_VERSION}
-    APACHE2_DIR=${BUILD_DIR}/apache2
+    APACHE2_DIR=${BUILD_DIR}
     untar_apache2_src
 
     cd ${APACHE2_SRC_DIR}
     ./configure \
-        LDFLAGS="-Wl,-rpath -Wl,\\\$\$ORIGIN/../../pcre/lib -Wl,-rpath -Wl,\\\$\$ORIGIN/../lib " \
+        LDFLAGS="-Wl,-rpath -Wl,\\\$\$ORIGIN/../pcre/lib -Wl,-rpath -Wl,\\\$\$ORIGIN/../lib " \
         --with-pcre=${PCRE_DIR} \
         --prefix=${APACHE2_DIR} \
         --enable-so \
@@ -45,8 +45,11 @@ build_apache2() {
     make
     make install
     
-    echo ${APACHE2_DIR} > ${ROOT_DIR}/APACHE2_DIR
+    echo ${BUILD_DIR} > ${ROOT_DIR}/BUILD_DIR
     sed -i -e "s,Listen 80,Listen ${PORT-80},g" ${APACHE2_DIR}/conf/httpd.conf
+    
+    mv ${APACHE2_DIR}/bin/httpd ${APACHE2_DIR}/bin/httpd-bin
+    cp ${ROOT_DIR}/bin/httpd ${APACHE2_DIR}/bin/httpd
     
     cd ${ROOT_DIR}
 }

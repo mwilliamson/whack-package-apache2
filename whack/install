@@ -4,10 +4,9 @@ set -e
 
 BUILD_DIR=`pwd`/build-dir
 INSTALL_DIR=$1
-ORIGINAL_APACHE2_DIR=`cat APACHE2_DIR`
-INSTALL_APACHE2_DIR=${INSTALL_DIR}/apache2
+ORIGINAL_DIR=`cat BUILD_DIR`
 
 cp -rT ${BUILD_DIR} ${INSTALL_DIR}
-cp -rT bin ${INSTALL_DIR}/bin
-find ${INSTALL_APACHE2_DIR}/conf -type f -print0 | xargs -0 sed -i -e "s,${ORIGINAL_APACHE2_DIR},${INSTALL_APACHE2_DIR},g"
+
+find ${INSTALL_DIR}/conf -type f -print0 | xargs -0 sed -i -e "s,${ORIGINAL_DIR},${INSTALL_DIR},g"
 
