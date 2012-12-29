@@ -7,6 +7,7 @@ INSTALL_DIR=$1
 ORIGINAL_DIR=`cat BUILD_DIR`
 
 cp -rT ${BUILD_DIR} ${INSTALL_DIR}
+cp BUILD_DIR ${INSTALL_DIR}/whack-build-dir
 
 find ${INSTALL_DIR}/conf -type f -print0 | xargs -0 sed -i -e "s,${ORIGINAL_DIR},${INSTALL_DIR},g"
 
