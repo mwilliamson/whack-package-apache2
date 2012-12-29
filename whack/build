@@ -46,7 +46,6 @@ build_apache2() {
     make install
     
     echo ${BUILD_DIR} > ${ROOT_DIR}/BUILD_DIR
-    sed -i -e "s,Listen 80,Listen ${PORT-80},g" ${APACHE2_DIR}/conf/httpd.conf
     
     sed -i -e s,"'${BUILD_DIR}",'$(dirname $0)/..'\',g ${APACHE2_DIR}/bin/apachectl
     sed -i -e s,"${BUILD_DIR}",'$(dirname $0)/..',g ${APACHE2_DIR}/bin/apachectl
