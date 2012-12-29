@@ -1,19 +1,15 @@
 import os
 import subprocess
+import time
 
 from nose.tools import istest, assert_equals
-from selenium import webdriver
 from starboard import find_local_free_tcp_port as find_port
+import bs4
+import requests
 
 from tempdir import create_temporary_dir
 
 
-@istest
-def selenium_is_working():
-    browser = webdriver.Firefox()
-    browser.close()
-
-    
 # TODO: assert that apache has stopped
 @istest
 def running_apache2_after_installation_shows_default_page():
@@ -53,11 +49,8 @@ def install_apache2(directory, port):
     subprocess.check_call(["whack", "install", path, directory, "-pport={0}".format(port), "--no-cache"])
 
 def assert_default_apache_page_is_visible(port):
+    time.sleep(1)
     url = "http://localhost:{0}/".format(port)
-    browser = webdriver.Firefox()
-    try:
-        browser.get(url)
-        element = browser.find_element_by_css_selector("h1")
-        assert_equals("It works!", element.text)
-    finally:
-        browser.close()
+    html = requests.get(url).text
+    document = bs4.BeautifulSoup(html)
+    assert_equals("It works!", document.h1.get_text())
