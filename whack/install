@@ -2,12 +2,51 @@
 
 set -e
 
-BUILD_DIR=`pwd`/build-dir
+ROOT_DIR=`pwd`
 INSTALL_DIR=$1
-ORIGINAL_DIR=`cat BUILD_DIR`
 
-cp -rT ${BUILD_DIR} ${INSTALL_DIR}
-cp BUILD_DIR ${INSTALL_DIR}/whack-build-dir
+. $(dirname $0)/set-versions
 
-find ${INSTALL_DIR}/conf -type f -print0 | xargs -0 sed -i -e "s,${ORIGINAL_DIR},${INSTALL_DIR},g"
+build_pcre() {
+    tar xzf pcre-${PCRE_VERSION}.tar.gz
+    PCRE_SRC_DIR=`pwd`/pcre-${PCRE_VERSION}
+    PCRE_DIR=${INSTALL_DIR}/pcre
+    cd ${PCRE_SRC_DIR}
+    ./configure --prefix=${PCRE_DIR}
+    make
+    make install
 
+    cd ${ROOT_DIR}
+}
+
+untar_apache2_src() {
+    tar xzf httpd-${APACHE2_VERSION}.tar.gz
+
+    mkdir -p ${APACHE2_SRC_DIR}/srclib/apr
+    tar xzf apr-${APR_VERSION}.tar.gz --directory ${APACHE2_SRC_DIR}/srclib/apr --strip-components 1
+
+    mkdir -p ${APACHE2_SRC_DIR}/srclib/apr-util
+    tar xzf apr-util-${APR_UTIL_VERSION}.tar.gz --directory ${APACHE2_SRC_DIR}/srclib/apr-util --strip-components 1
+}
+
+build_apache2() {
+    build_pcre
+    APACHE2_SRC_DIR=httpd-${APACHE2_VERSION}
+    APACHE2_DIR=${INSTALL_DIR}
+    untar_apache2_src
+
+    cd ${APACHE2_SRC_DIR}
+    ./configure \
+        --with-pcre=${PCRE_DIR} \
+        --prefix=${APACHE2_DIR} \
+        --bindir=${APACHE2_DIR}/.bin \
+        --sbindir=${APACHE2_DIR}/.bin \
+        --enable-so \
+        --with-mpm=prefork
+    make
+    make install
+    
+    cd ${ROOT_DIR}
+}
+
+build_apache2
