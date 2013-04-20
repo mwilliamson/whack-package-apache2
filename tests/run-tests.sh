@@ -7,4 +7,4 @@ fi
 
 _virtualenv/bin/pip install -r requirements.txt
 source _virtualenv/bin/activate
-nosetests installation_test.py -m'^$'
+nosetests installation_test.py -m'^$' -s

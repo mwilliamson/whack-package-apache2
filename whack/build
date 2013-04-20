@@ -5,8 +5,6 @@ set -e
 ROOT_DIR=`pwd`
 INSTALL_DIR=$1
 
-. $(dirname $0)/set-versions
-
 build_pcre() {
     tar xzf pcre-${PCRE_VERSION}.tar.gz
     PCRE_SRC_DIR=`pwd`/pcre-${PCRE_VERSION}
