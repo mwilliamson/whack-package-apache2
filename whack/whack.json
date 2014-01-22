@@ -2,7 +2,7 @@
     "name": "apache2",
     "paramSlug": "{apache2_version}",
     "defaultParams": {
-        "apache2_version": "2.4.6",
+        "apache2_version": "2.4.7",
         "pcre_version": "8.33",
         "apr_version": "1.5.0",
         "apr_util_version": "1.5.3"
