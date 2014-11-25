@@ -2,10 +2,10 @@
     "name": "apache2",
     "paramSlug": "{apache2_version}",
     "defaultParams": {
-        "apache2_version": "2.4.7",
-        "pcre_version": "8.34",
-        "apr_version": "1.5.0",
-        "apr_util_version": "1.5.3"
+        "apache2_version": "2.4.10",
+        "pcre_version": "8.36",
+        "apr_version": "1.5.1",
+        "apr_util_version": "1.5.4"
     },
     "sourcePaths": ["whack"]
 }
